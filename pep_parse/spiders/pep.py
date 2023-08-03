@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 import scrapy
 
 from pep_parse.items import PepParseItem
@@ -14,7 +16,8 @@ class PepSpider(scrapy.Spider):
         ).getall()
 
         for link in links:
-            yield response.follow(link, callback=self.parse_pep)
+            url = urljoin(link, "/")
+            yield response.follow(url, callback=self.parse_pep)
 
     def parse_pep(self, response):
         number, name = response.css("h1.page-title::text").get().split(" – ")
